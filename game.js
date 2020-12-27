@@ -10,10 +10,10 @@ function onWindowLoad() {
 
     shuffledCards
     .forEach( (cardData) => {
-        var element = document.createElement("Input");
+        var element = document.createElement("div");
         element.setAttribute("type", "div");
-        element.setAttribute("value", cardData);
         element.setAttribute("class", "grid-item")
+        element.textContent = cardData
         element.setAttribute("contenteditable", "false")
         parentContainer.appendChild(element)
     }); 
