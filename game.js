@@ -2,6 +2,7 @@ window.onload = onWindowLoad()
 
 
 function onWindowLoad() { 
+
     cardData = provideCardsData();
     shuffledCards = shffledData(cardData) ; 
     setInitialState(shuffledCards) ; 
@@ -9,20 +10,52 @@ function onWindowLoad() {
     parentContainer = document.getElementById("parentContainer") ; 
 
     shuffledCards
-    .forEach( (cardData) => {
-        var element = document.createElement("div");
-        element.setAttribute("type", "div");
-        element.setAttribute("class", "grid-item")
-        element.textContent = cardData
-        element.setAttribute("contenteditable", "false")
-        parentContainer.appendChild(element)
+    .forEach( (cardData, index) => {
+        var scene = document.createElement("div");
+        var card = document.createElement("div");
+
+        scene.setAttribute("type", "div");
+        scene.setAttribute("class", "scene");
+        scene.appendChild(card);
+
+        card.setAttribute("class", "card is-flipped")
+
+        var front = document.createElement("div");
+        var back = document.createElement("div");
+
+        front.setAttribute("class", "front cardFace");
+        back.setAttribute("class", "back cardFace");
+        front.textContent = String.fromCodePoint(cardData);
+        back.textContent = "back";
+        card.appendChild(front);
+        card.appendChild(back);
+        
+        listenToClicks(card, scene, index);
+        parentContainer.appendChild(scene);
     }); 
 }
 
+function listenToClicks(card, inScene, atIndex) { 
+    scene = inScene 
+    scene.addEventListener( 'click', function() {
+        flip(card, atIndex)
+          });
+}
+function flip(card, atIndex) { 
+    var index = atIndex;
+    updatedState = card.classList.toggle('is-flipped');
+    updateState(updatedState,index);
+
+}
+function updateState(newState, atIndex) {
+    console.log("there's a card is being flipped for index")
+    var s = newState + " " + atIndex
+    console.log(s)
+}
 function setInitialState(withArray) { 
-    this.state = withArray.map ( emoji => {
+    this.state = withArray.map ( (emoji, index) => {
         //TODO: we should have an id to keep track of things ??
-        return { name: emoji, isFlipped: false}
+        return { name: emoji, isFlipped: false, index: index, markedCorrectly: true}
     })
     
 }
@@ -31,19 +64,15 @@ function provideCardsData() {
 
     //TODO: we should provide a better implemntation, with supporting for streams? 
     
-    // var emojis = [0x1F600, 0x1F604, 0x1F34A, 0x1F344, 0x1F37F, 0x1F363, 0x1F370, 0x1F355,
-    //     0x1F354, 0x1F35F, 0x1F6C0, 0x1F48E, 0x1F5FA, 0x23F0, 0x1F579, 0x1F4DA,
-    //     0x1F431, 0x1F42A, 0x1F439, 0x1F424];
-    var emojis = ["m","f","dde"];
+    var emojis = [0x1F600, 0x1F604, 0x1F34A, 0x1F344, 0x1F37F, 0x1F363, 0x1F370, 0x1F355,
+        0x1F354];
+    // var emojis = ["m","f","dde"];
 
   return emojis
   .flatMap( emoji => [emoji, emoji])
   .reduce( function (initialValue, currentEmojiArray) { 
     return initialValue.concat(currentEmojiArray)
   }, [])
-
-
-    
 }
 
 
