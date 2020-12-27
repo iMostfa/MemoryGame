@@ -30,32 +30,71 @@ function onWindowLoad() {
         card.appendChild(front);
         card.appendChild(back);
         
+        this.cardElements.push(card)
         listenToClicks(card, scene, index);
         parentContainer.appendChild(scene);
     }); 
 }
 
 function listenToClicks(card, inScene, atIndex) { 
-    scene = inScene 
+    scene = inScene ;
     scene.addEventListener( 'click', function() {
-        flip(card, atIndex)
+        flip(card, atIndex, true)
           });
 }
-function flip(card, atIndex) { 
+function flip(card, atIndex, thenUpdate) { 
     var index = atIndex;
     updatedState = card.classList.toggle('is-flipped');
-    updateState(updatedState,index);
+
+    
+
+    // TODO: there must be a better way ?
+    setTimeout(function (){
+
+        if (thenUpdate) {
+            updateState(updatedState,index, card);
+            }
+              
+      }, 1000); 
+  
+}
+
+//TODO: clean not needed work
+function updateState(newState, atIndex, inCard) {
+ 
+    this.state[atIndex].isFlipped = !newState
+    currentlySelected.push(atIndex)
+
+    //check if the currentlySelected reach 2
+        //if yes, check if two elements at cardselements equal in text Content, if no, close both of them
+        if (currentlySelected.length == 2) { 
+            var firstSelectedIndex = currentlySelected[0]
+            var secondSelectedIndex = currentlySelected[1]
+
+            var firstSelectedCard = cardElements[firstSelectedIndex]
+            var secondSelectedCard = cardElements[secondSelectedIndex]
+
+            if (firstSelectedCard.textContent == secondSelectedCard.textContent) { 
+                console.log("wow match")
+                this.currentlySelected = []
+            } else { 
+                console.log("cleaning")
+                flip(firstSelectedCard, firstSelectedIndex)
+                flip(secondSelectedCard, secondSelectedIndex)
+                this.currentlySelected = []
+            }
+        }
+    
 
 }
-function updateState(newState, atIndex) {
-    console.log("there's a card is being flipped for index")
-    var s = newState + " " + atIndex
-    console.log(s)
-}
 function setInitialState(withArray) { 
+    this.totalOpend = 0  ; /* total opened cards which are not solved */
+    this.currentlySelected = []
+    this.cardElements = []
+
     this.state = withArray.map ( (emoji, index) => {
         //TODO: we should have an id to keep track of things ??
-        return { name: emoji, isFlipped: false, index: index, markedCorrectly: true}
+        return { name: emoji, isFlipped: false, index: index, markedCorrectly: false}
     })
     
 }
@@ -71,8 +110,10 @@ function provideCardsData() {
   return emojis
   .flatMap( emoji => [emoji, emoji])
   .reduce( function (initialValue, currentEmojiArray) { 
-    return initialValue.concat(currentEmojiArray)
+    return initialValue.concat(currentEmojiArray) 
   }, [])
+
+
 }
 
 
