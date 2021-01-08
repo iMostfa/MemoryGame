@@ -65,4 +65,4 @@ function shffledData(array) {
 
 }
 
-export { MemoryGame };
+export { MemoryGame  };
