@@ -1,16 +1,20 @@
-import { MemoryGame } from './modules/gameEnigne.js';
+import { MemoryGame } from './modules/gameEngine.js';
 
 var scene;
 var memoryGame;
+
 var openedCards = [];
 var cards = [];
 var matchedCards = [];
+var cardViews = []; 
 
 
 window.onload = onWindowLoad
 
 function onWindowLoad() {
-    memoryGame = new MemoryGame(4, "");
+    var number = prompt("Hello, eneter the number of pairs, max is 8")
+    //TODO: handle if the user didn't enter a number
+    memoryGame = new MemoryGame(number, "");
 
     memoryGame.start();
 
@@ -19,20 +23,20 @@ function onWindowLoad() {
 
     memoryGame.options
         .forEach((cardData, index) => {
-            scene = document.createElement("div");
-            var card = document.createElement("div");
-
+            scene = document.createElement("div"); 
+            var card = document.createElement("div"); 
             scene.setAttribute("type", "div");
             scene.setAttribute("class", "scene");
             scene.appendChild(card);
-
+            
             card.setAttribute("class", "card");
+            card.setAttribute("id", index)
             card.textContent = String.fromCodePoint(cardData);
             cards.push(card);
 
             card.addEventListener("click", displayCard);
-            card.addEventListener("click", cardOpen);
-
+            card.addEventListener("click", openCard);
+            cardViews.push(card)
             parentContainer.appendChild(scene);
         });
 }
@@ -46,48 +50,42 @@ var displayCard = function() {
 };
 
 //add opened cards to OpenedCards list and check if cards are match or not
-function cardOpen() {
-    openedCards.push(this);
-    var len = openedCards.length;
-    console.log(len)
-    if (len === 2) {
-        if (openedCards[0].textContent === openedCards[1].textContent) {
-            matched();
-        } else {
-            unmatched();
-        }
-    }
+var  openCard = function() {
+    memoryGame.select(this.id,matched,unmatched ) //this refrences for for the caller of the function, which is HTML card?!
 };
 
-function matched() {
-    openedCards[0].classList.add("match", "disabled");
-    openedCards[1].classList.add("match", "disabled");
-    openedCards[0].classList.remove("show", "open", "no-event");
-    openedCards[1].classList.remove("show", "open", "no-event");
+var matched = function(cards) {
+    cards.forEach((cardIndex) => { 
+      cardViews[cardIndex].classList.add("match", "disabled");
+      cardViews[cardIndex].classList.remove("show", "open", "no-event");
+    })
     openedCards = [];
-}
+};
 
 
-function unmatched() {
-    openedCards[0].classList.add("unmatched");
-    openedCards[1].classList.add("unmatched");
+var unmatched = function(cards) {
+    cards.forEach((cardIndex) => { 
+       cardViews[cardIndex].classList.add("unmatched");
+    })
     disable();
     setTimeout(function() {
-        openedCards[0].classList.remove("show", "open", "no-event", "unmatched");
-        openedCards[1].classList.remove("show", "open", "no-event", "unmatched");
-        openedCards = [];
+        cards.forEach((cardIndex) => { 
+         cardViews[cardIndex].classList.remove("show", "open", "no-event", "unmatched");
+        })
         enable();
     }, 1000);
 }
 
 
-function disable() {
-    Array.prototype.filter.call(cards, function(card) {
+var disable = function() {
+    cards.forEach((card) => { 
         card.classList.add('disabled');
-    });
+     })
+
 }
 
-function enable() {
+var enable = function() {
+
     Array.prototype.filter.call(cards, function(card) {
         card.classList.remove('disabled');
         for (var i = 0; i < matchedCards.length; i++) {
