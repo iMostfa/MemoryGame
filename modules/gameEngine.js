@@ -18,7 +18,6 @@ class MemoryGame {
     start() {
         this.setInitialState(this.options);
         this.started = true
-
     }
 
 
@@ -26,7 +25,6 @@ class MemoryGame {
         this.state = withArray.map((emoji, index) => {
             return { name: emoji, index: index, markedCorrectly: false }
         })
-
     }
 
     updateState(cardIndex, withState) {
