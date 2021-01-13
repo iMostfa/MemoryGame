@@ -121,7 +121,7 @@ body {
 .card.match {
     cursor: default;
     background: #08d9d6;
-    font-size: 50px;
+    font-size: 3vw;
     animation-name: rubberBand;
     -webkit-backface-visibility: visible !important;
     backface-visibility: visible !important;
