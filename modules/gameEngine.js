@@ -21,6 +21,7 @@ class MemoryGame {
 
     }
 
+
     setInitialState(withArray) {
         this.state = withArray.map((emoji, index) => {
             return { name: emoji, index: index, markedCorrectly: false }

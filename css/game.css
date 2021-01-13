@@ -83,7 +83,7 @@ body {
     padding: 20px;
     border-radius: 20px;
     grid-template-columns: repeat(4, .3fr);
-    grid-auto-rows: 16vh;
+    grid-auto-rows: 8vw;
     grid-gap: 12px;
     margin: 14px;
 }
@@ -111,7 +111,7 @@ body {
 .card.open {
     background: #eaeaea;
     cursor: default;
-    font-size: 50px;
+    font-size: 3vw;
     animation-name: flipInY;
     -webkit-backface-visibility: visible !important;
     backface-visibility: visible !important;
