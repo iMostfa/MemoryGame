@@ -42,7 +42,7 @@ body {
     animation: cube 12s ease-in forwards infinite;
 }
 
-.cube:nth-child(2n) {
+.cube:nth-child(1) {
     border-color: #f8567e;
 }
 

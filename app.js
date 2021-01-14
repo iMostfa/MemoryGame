@@ -106,35 +106,41 @@ var openCard = function() {
 
 var matched = function(openCards, moves) {
 
-    movesText.innerHTML = `${moves} Move(s)`
+    setTimeout(function() {
+        movesText.innerHTML = `${moves} Move(s)`
 
-    openCards.forEach((cardIndex) => {
-        cardViews[cardIndex].classList.add("match", "disabled");
-        cardViews[cardIndex].classList.remove("show", "open", "no-event");
+        openCards.forEach((cardIndex) => {
+            cardViews[cardIndex].classList.add("match", "disabled");
+            cardViews[cardIndex].classList.remove("show", "open", "no-event");
+            matchedCards.push(cardViews)
+        })
 
-        matchedCards.push(cardViews)
-    })
+        if (matchedCards.length == cardViews.length) {
+            endGame()
+        }
+    }, 700);
 
-    if (matchedCards.length == cardViews.length) {
-        endGame()
-    }
 };
 
 
 var unmatched = function(openCards, moves) {
 
-    movesText.innerHTML = `${moves} Move(s)`
-
-    openCards.forEach((cardIndex) => {
-        cardViews[cardIndex].classList.add("unmatched");
-    })
-    disable();
     setTimeout(function() {
+        movesText.innerHTML = `${moves} Move(s)`
+
         openCards.forEach((cardIndex) => {
-            cardViews[cardIndex].classList.remove("show", "open", "no-event", "unmatched");
+            cardViews[cardIndex].classList.add("unmatched");
         })
-        enable();
-    }, 1000);
+        disable();
+        setTimeout(function() {
+            openCards.forEach((cardIndex) => {
+                cardViews[cardIndex].classList.remove("show", "open", "no-event", "unmatched");
+            })
+            enable();
+        }, 1000);
+
+    }, 700);
+
 }
 
 
